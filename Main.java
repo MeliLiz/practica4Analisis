@@ -36,9 +36,11 @@ public class Main {
                 g.agregarArista(cadena2[0], cadena2[1], cadena2[2]);
             }
 
-            g.imprimirGrafica();
+            //g.imprimirGrafica();
             g.generarMatrizAdyacencias();
             g.imprimirMatriz();
+            g.bosqueGenerador();
+            g.imprimirArboles();
             
         } catch (IOException e) {
             e.printStackTrace();

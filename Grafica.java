@@ -2,14 +2,13 @@ import java.util.PriorityQueue;
 import java.util.ArrayList;
 
 public class Grafica{
-    private Arista[] aristas;
-    private Vertice[] vertices;
+    private ArrayList <Arista> aristas;
+    private ArrayList <Vertice> vertices;
     private int numVertices;
     private int numAristas;
-    private int contadorVertice=0;
-    private int contadorAristas =0;
     private int[][] incidencias;
-    private PriorityQueue<Arista> cola = new PriorityQueue<Arista>();
+    private PriorityQueue<Arista> cola = new PriorityQueue<>();
+    private ArrayList<Grafica> arboles = new ArrayList<>();
 
     //Determinar el bosque generador de peso minimo de una grafica disconexa usando BFS
 
@@ -19,8 +18,8 @@ public class Grafica{
      * @param numAristas
      */
     public Grafica(int numVertices, int numAristas){
-        this.aristas = new Arista[numAristas];
-        this.vertices = new Vertice[numVertices];
+        this.aristas = new ArrayList <Arista>();
+        this.vertices = new ArrayList <Vertice>();
         this.numVertices = numVertices;
         this.numAristas = numAristas;
         incidencias = new int[numVertices][numVertices]; 
@@ -29,6 +28,14 @@ public class Grafica{
                 incidencias[i][j]=0;
             }
         }
+    }
+
+    /**
+     * Metodo para generar una grafica sin saber cuantas aristas y vertices tendra
+     */
+    public Grafica(){
+        aristas = new ArrayList <Arista>();
+        vertices = new ArrayList <Vertice>();
     }
 
     /**
@@ -42,17 +49,26 @@ public class Grafica{
         Vertice v2 = new Vertice(vert2);
         ciclo:
         for (int i = 0; i < numVertices; i++) {
-            if(vertices[i].equals(v1)){
+            Vertice vi = vertices.get(i);
+            if(vi.equals(v1)){ 
                 for (int j = 0; j < numVertices; j++) {
-                    if(vertices[j].equals(v2)){
-                        Arista a = new Arista(vertices[i], vertices[j], peso);
-                        this.aristas[contadorAristas] = a;
-                        contadorAristas+=1;
+                    Vertice vj = vertices.get(j);
+                    if(vj.equals(v2)){
+                        agregarArista(vi,vj,peso);
                         break ciclo;
                     }
                 }
             }
         }
+    }
+
+    public void agregarArista(Vertice v1, Vertice v2, int peso){
+        Arista a = new Arista(v1, v2, peso);
+        aristas.add(a);
+    }
+
+    public void agregarArista(Arista arista){
+        aristas.add(arista);
     }
 
     /**
@@ -61,8 +77,11 @@ public class Grafica{
      */
     public void agregarVertice(int vert){
         Vertice v = new Vertice(vert);
-        this.vertices[contadorVertice] = v;
-        contadorVertice +=1;
+        vertices.add(v);
+    }
+
+    public void agregarVertice(Vertice v){
+        vertices.add(v);
     }
 
     /**
@@ -70,14 +89,14 @@ public class Grafica{
      */
     public void generarMatrizAdyacencias(){
         for (int i = 0; i < numAristas; i++) {
-            Arista arista = aristas[i];
+            Arista arista = aristas.get(i);
             int v1Nombre = arista.getV1().getNombre();
             int v2Nombre = arista.getV2().getNombre();
             int peso = arista.getPeso();
             for(int j=0;j<numVertices;j++){
-                if(vertices[j].getNombre()==v1Nombre){
+                if(vertices.get(j).getNombre()==v1Nombre){
                     for(int k=0;k<numVertices;k++){
-                        if(vertices[k].getNombre()==v2Nombre){
+                        if(vertices.get(k).getNombre()==v2Nombre){
                             incidencias[j][k]=peso;
                             incidencias[k][j]=peso;
                         }
@@ -91,8 +110,9 @@ public class Grafica{
     * Metodo para imprimir las aristas de la grafica
     */
     public void imprimirAristas(){
-        for(int i = 0; i < this.numAristas; i++){
-            System.out.println(this.aristas[i]);
+        System.out.print("\nAristas:\n");
+        for(int i = 0; i < aristas.size(); i++){
+            System.out.println(aristas.get(i));
         }
     }
 
@@ -100,9 +120,11 @@ public class Grafica{
      * Metodo para imprimir los vertices de la grafica
      */
     public void imprimirVertices(){
-        for(int i = 0; i < this.numVertices; i++){
-            System.out.println(this.vertices[i]);
+        System.out.print("\nVertices: ");
+        for(int i = 0; i < vertices.size(); i++){
+            System.out.print(vertices.get(i)+" ");
         }
+        System.out.println();
     }
 
     /**
@@ -128,36 +150,42 @@ public class Grafica{
 
     public void ArbolGenerador(int indiceInicial){
         int indiceNuevo = indiceInicial;
-        Vertice nuevo = vertices[indiceNuevo];
+        Vertice nuevo = vertices.get(indiceNuevo);
+        Grafica g = arboles.get(arboles.size()-1);
 
         nuevo.setVisitado(true);
+        g.agregarVertice(nuevo);
         for (int i = 0; i < numVertices; i++) {
             int num =incidencias[indiceNuevo][i]; //Vertices en la posicion i que tienen arista con el vertice nuevo
             if(num!= 0){// Si hay arista con nuevo
-                Arista a = new Arista(nuevo, vertices[i], num);
+                Arista a = new Arista(nuevo, vertices.get(i), num);
                 cola.add(a);
             }
         }
+
         while(!cola.isEmpty()){
 
             //Sacar el vertice de la cola
             Arista arista = cola.poll();
             Vertice v1 = arista.getV1();
             Vertice v2 = arista.getV2();
+            g.agregarArista(arista);
 
             if(!v1.getVisitado()){
                 v1.setVisitado(true);
+                g.agregarVertice(v1);
                 nuevo = v1;
                 for (int i = 0; i < numVertices; i++) {
-                    if(vertices[i].equals(v1)){
+                    if(vertices.get(i).equals(v1)){
                         indiceNuevo = i;
                     }
                 }
             }else{
                 v2.setVisitado(true);
+                g.agregarVertice(v2);
                 nuevo = v2;
                 for (int i = 0; i < numVertices; i++) {
-                    if(vertices[i].equals(v2)){
+                    if(vertices.get(i).equals(v2)){
                         indiceNuevo = i;
                     }
                 }
@@ -167,8 +195,9 @@ public class Grafica{
             for (int i = 0; i < numVertices; i++) {
                 int num =incidencias[indiceNuevo][i]; //Vertices en la posicion i que tienen arista con el vertice nuevo
                 if(num!= 0){// Si hay arista con nuevo
-                    if(!vertices[i].getVisitado()){// y no han sido visitados
-                        Arista a = new Arista(nuevo, vertices[i], num);
+                    Vertice vi = vertices.get(i);
+                    if(!vi.getVisitado()){// y no han sido visitados
+                        Arista a = new Arista(nuevo, vi, num);
                         cola.add(a);
                     }
                 }
@@ -178,9 +207,18 @@ public class Grafica{
 
     public void bosqueGenerador(){
         for (int i = 0; i < numVertices; i++) {
-            if(!vertices[i].getVisitado()){
+            if(!vertices.get(i).getVisitado()){
+                arboles.add(new Grafica());
                 ArbolGenerador(i);
             }
+        }
+    }
+
+    public void imprimirArboles(){
+        for (int i = 0; i < arboles.size(); i++) {
+            Grafica g = arboles.get(i);
+            System.out.println("Arbol " + (i+1));
+            g.imprimirGrafica();
         }
     }
 

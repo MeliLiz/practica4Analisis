@@ -20,7 +20,7 @@ public class Vertice{
     }
 
     public String toString(){
-        return "Vertice: " + this.nombre;
+        return ""+this.nombre;
     }
 
     public boolean equals(Vertice v){

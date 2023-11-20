@@ -1,4 +1,4 @@
-public class Arista {
+public class Arista implements Comparable<Arista>{
     
     private Vertice v1;
     private Vertice v2;
@@ -23,6 +23,18 @@ public class Arista {
     }
     
     public String toString(){
-        return "v1: " + this.v1 + " v2: " + this.v2 + " Peso: " + this.peso;
+        return "" + this.v1 + ", " + this.v2 + " Peso: " + this.peso;
+    }
+
+    @Override
+    public int compareTo(Arista o) {
+        /*if(this.peso < o.getPeso()){
+            return -1;
+        }else if(this.peso > o.getPeso()){
+            return 1;
+        }else{
+            return 0;
+        }*/
+        return Integer.compare(this.peso, o.peso);
     }
 }
