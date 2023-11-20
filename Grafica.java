@@ -13,7 +13,7 @@ public class Grafica{
     //Determinar el bosque generador de peso minimo de una grafica disconexa usando BFS
 
     /**
-     * Constructor, inicializa el arreglo de aritas, de vertices y la matriz de adyacencias
+     * Constructor, inicializa el arreglo de aritas, de vertices y la matriz de adyacencias.
      * @param numVertices
      * @param numAristas
      */
@@ -39,7 +39,26 @@ public class Grafica{
     }
 
     /**
-     * Metodo para agregar una arista en la grafica. Es una arista que ya se contemplaba en numAristas al crear la grafica.
+     * Metodo para agregar un vertice en la grafica dado el nombre del vertice.
+     * @param vert
+     */
+    public void agregarVertice(int vert){
+        Vertice v = new Vertice(vert);
+        vertices.add(v);
+    }
+
+    /**
+     * Metodo para agregar un vertice a la grafica dado el vertice
+     * @param v
+     */
+    public void agregarVertice(Vertice v){
+        vertices.add(v);
+    }
+
+
+    /**
+     * Metodo para agregar una arista en la grafica dados el nombre de los vertices que conecta y su pedo.
+     * Los vertices que conecta la arista ya deben estar en la grafica.
      * @param vert1
      * @param vert2
      * @param peso
@@ -62,28 +81,26 @@ public class Grafica{
         }
     }
 
+    /**
+     * Metodo para agregar una arista a la grafica dados dos vertices y el peso de la arista.
+     * @param v1
+     * @param v2
+     * @param peso
+     */
     public void agregarArista(Vertice v1, Vertice v2, int peso){
         Arista a = new Arista(v1, v2, peso);
         aristas.add(a);
     }
 
+    /**
+     * Metodo para agregar una arista a la grafica dada una arista.
+     * @param arista
+     */
     public void agregarArista(Arista arista){
         aristas.add(arista);
     }
 
-    /**
-     * Metodo para agregar un vertice en la grafica. Es un vertice que ya se contemplaba en numVertices al crear la grafica.
-     * @param vert
-     */
-    public void agregarVertice(int vert){
-        Vertice v = new Vertice(vert);
-        vertices.add(v);
-    }
-
-    public void agregarVertice(Vertice v){
-        vertices.add(v);
-    }
-
+    
     /**
      * Metodo para generar la matriz de adyacencias, donde pondremos los pesos de las aristas
      */
@@ -104,48 +121,6 @@ public class Grafica{
                 }
             }
         }
-    }
-
-   /**
-    * Metodo para imprimir las aristas de la grafica
-    */
-    public void imprimirAristas(){
-        System.out.print("\nAristas:\n");
-        for(int i = 0; i < aristas.size(); i++){
-            System.out.println(aristas.get(i));
-        }
-    }
-
-    /**
-     * Metodo para imprimir los vertices de la grafica
-     */
-    public void imprimirVertices(){
-        System.out.print("\nVertices: ");
-        for(int i = 0; i < vertices.size(); i++){
-            System.out.print(vertices.get(i)+" ");
-        }
-        System.out.println();
-    }
-
-    /**
-     * Metodo para imprimir las aristas y los vertices de la grafica
-     */
-    public void imprimirGrafica(){
-        this.imprimirAristas();
-        this.imprimirVertices();
-    }
-
-    /**
-     * Metodo para imprimir la matriz de adyacencias de la grafica
-     */
-    public void imprimirMatriz(){
-        for (int i = 0; i < numVertices; i++) {
-            for (int j = 0; j < numVertices; j++) {
-                System.out.print(incidencias[i][j] + " ");
-            }
-            System.out.print("\n");
-        }
-
     }
 
     public void ArbolGenerador(int indiceInicial){
@@ -169,8 +144,12 @@ public class Grafica{
             Arista arista = cola.poll();
             Vertice v1 = arista.getV1();
             Vertice v2 = arista.getV2();
-            g.agregarArista(arista);
-
+            if(!v1.getVisitado() || !v2.getVisitado()){
+                g.agregarArista(arista);
+            }else{
+                break;
+            }
+            
             if(!v1.getVisitado()){
                 v1.setVisitado(true);
                 g.agregarVertice(v1);
@@ -214,6 +193,51 @@ public class Grafica{
         }
     }
 
+    /**
+    * Metodo para imprimir las aristas de la grafica
+    */
+    public void imprimirAristas(){
+        System.out.print("\nAristas:\n");
+        for(int i = 0; i < aristas.size(); i++){
+            System.out.println(aristas.get(i));
+        }
+    }
+
+    /**
+     * Metodo para imprimir los vertices de la grafica
+     */
+    public void imprimirVertices(){
+        System.out.print("\nVertices: ");
+        for(int i = 0; i < vertices.size(); i++){
+            System.out.print(vertices.get(i)+" ");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Metodo para imprimir las aristas y los vertices de la grafica
+     */
+    public void imprimirGrafica(){
+        this.imprimirAristas();
+        this.imprimirVertices();
+    }
+
+    /**
+     * Metodo para imprimir la matriz de adyacencias de la grafica
+     */
+    public void imprimirMatriz(){
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                System.out.print(incidencias[i][j] + " ");
+            }
+            System.out.print("\n");
+        }
+
+    }
+
+    /**
+     * Metodo para imprimir los arboles generadores
+     */
     public void imprimirArboles(){
         for (int i = 0; i < arboles.size(); i++) {
             Grafica g = arboles.get(i);
