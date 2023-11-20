@@ -37,6 +37,8 @@ public class Main {
             }
 
             g.imprimirGrafica();
+            g.generarMatrizAdyacencias();
+            g.imprimirMatriz();
             
         } catch (IOException e) {
             e.printStackTrace();
