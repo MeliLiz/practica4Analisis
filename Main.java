@@ -12,7 +12,11 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        String filePath = "Archivo.txt";
+        if(args.length!=1){
+            System.out.println("Uso: java Main <Archivo>");
+            System.exit(0);
+        }
+        String filePath = args[0];
         ArrayList<int[]> cadenas = new ArrayList<int[]>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
