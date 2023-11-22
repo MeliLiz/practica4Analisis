@@ -28,13 +28,6 @@ public class Arista implements Comparable<Arista>{
 
     @Override
     public int compareTo(Arista o) {
-        /*if(this.peso < o.getPeso()){
-            return -1;
-        }else if(this.peso > o.getPeso()){
-            return 1;
-        }else{
-            return 0;
-        }*/
         return Integer.compare(this.peso, o.peso);
     }
 }

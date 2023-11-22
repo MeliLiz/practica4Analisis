@@ -147,7 +147,7 @@ public class Grafica{
             if(!v1.getVisitado() || !v2.getVisitado()){
                 g.agregarArista(arista);
             }else{
-                break;
+                //break;
             }
             
             if(!v1.getVisitado()){
@@ -245,38 +245,5 @@ public class Grafica{
             g.imprimirGrafica();
         }
     }
-
-
-
-    /*public void bfs(){
-        for(int i = 0; i < this.numVertices; i++){
-            this.vertices[i].setVisitado(false);
-        }
-        for(int i = 0; i < this.numVertices; i++){
-            if(!this.vertices[i].getVisitado()){
-                this.bfs(this.vertices[i]);
-            }
-        }
-    }
-    public void bfs(Vertice v){
-        Cola<Vertice> cola = new Cola<Vertice>();
-        cola.encolar(v);
-        v.setVisitado(true);
-        while(!cola.esVacia()){
-            Vertice aux = cola.desencolar();
-            System.out.println(aux);
-            for(int i = 0; i < this.numAristas; i++){
-                if(this.aristas[i].getV1().equals(aux) && !this.aristas[i].getV2().getVisitado()){
-                    cola.encolar(this.aristas[i].getV2());
-                    this.aristas[i].getV2().setVisitado(true);
-                }
-                if(this.aristas[i].getV2().equals(aux) && !this.aristas[i].getV1().getVisitado()){
-                    cola.encolar(this.aristas[i].getV1());
-                    this.aristas[i].getV1().setVisitado(true);
-                }
-            }
-        }
-    }*/
-
    
 }
