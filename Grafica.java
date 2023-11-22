@@ -1,14 +1,18 @@
 import java.util.PriorityQueue;
 import java.util.ArrayList;
 
+/**
+ * Clase que representa a una grafica
+ */
 public class Grafica{
     private ArrayList <Arista> aristas;
     private ArrayList <Vertice> vertices;
-    private int numVertices;
-    private int numAristas;
-    private int[][] incidencias;
+    private int numVertices=0;
+    private int numAristas=0;
+    private int[][] incidencias;//Matriz de adyacencias al realizar el proceso de generar matriz
     private PriorityQueue<Arista> cola = new PriorityQueue<>();
-    private ArrayList<Grafica> arboles = new ArrayList<>();
+    private ArrayList<Grafica> arboles = new ArrayList<>(); //Bosque generador al aplicar el algoritmo Bosque generador
+    private boolean constructor2=false; //Indicador de si la grafica se creo con el constructor 2.
 
     //Determinar el bosque generador de peso minimo de una grafica disconexa usando BFS
 
@@ -31,11 +35,13 @@ public class Grafica{
     }
 
     /**
-     * Metodo para generar una grafica sin saber cuantas aristas y vertices tendra
+     * Metodo para generar una grafica sin saber cuantas aristas y vertices tendra. 
+     * Con este metodo se debe generar la matriz de adyacencias despues de haber agregado los vertices y aristas
      */
     public Grafica(){
         aristas = new ArrayList <Arista>();
         vertices = new ArrayList <Vertice>();
+        constructor2 = true;
     }
 
     /**
@@ -45,6 +51,9 @@ public class Grafica{
     public void agregarVertice(int vert){
         Vertice v = new Vertice(vert);
         vertices.add(v);
+        if (constructor2) {
+            numVertices+=1;
+        }
     }
 
     /**
@@ -53,6 +62,9 @@ public class Grafica{
      */
     public void agregarVertice(Vertice v){
         vertices.add(v);
+        if (constructor2) {
+            numVertices+=1;
+        }
     }
 
 
@@ -74,6 +86,9 @@ public class Grafica{
                     Vertice vj = vertices.get(j);
                     if(vj.equals(v2)){
                         agregarArista(vi,vj,peso);
+                        if (constructor2) {
+                            numAristas+=1;
+                        }
                         break ciclo;
                     }
                 }
@@ -90,6 +105,9 @@ public class Grafica{
     public void agregarArista(Vertice v1, Vertice v2, int peso){
         Arista a = new Arista(v1, v2, peso);
         aristas.add(a);
+        if (constructor2) {
+            numAristas+=1;
+        }
     }
 
     /**
@@ -98,6 +116,9 @@ public class Grafica{
      */
     public void agregarArista(Arista arista){
         aristas.add(arista);
+        if (constructor2) {
+            numAristas+=1;
+        }
     }
 
     
@@ -123,6 +144,10 @@ public class Grafica{
         }
     }
 
+    /**
+     * Metodo para obtener el arbol generador de una grafica conexa
+     * @param indiceInicial El indice del vertice del que comenzaremos el algoritmo
+     */
     public void ArbolGenerador(int indiceInicial){
         int indiceNuevo = indiceInicial;
         Vertice nuevo = vertices.get(indiceNuevo);
@@ -130,6 +155,7 @@ public class Grafica{
 
         nuevo.setVisitado(true);
         g.agregarVertice(nuevo);
+        //Metemos a la cola las aristas del primer vértice
         for (int i = 0; i < numVertices; i++) {
             int num =incidencias[indiceNuevo][i]; //Vertices en la posicion i que tienen arista con el vertice nuevo
             if(num!= 0){// Si hay arista con nuevo
@@ -147,7 +173,7 @@ public class Grafica{
             if(!v1.getVisitado() || !v2.getVisitado()){
                 g.agregarArista(arista);
             }else{
-                //break;
+                continue;
             }
             
             if(!v1.getVisitado()){
@@ -184,6 +210,9 @@ public class Grafica{
         }
     }
 
+    /**
+     * Metodo para obtener el bosque generador de una grafica
+     */
     public void bosqueGenerador(){
         for (int i = 0; i < numVertices; i++) {
             if(!vertices.get(i).getVisitado()){
@@ -218,8 +247,8 @@ public class Grafica{
      * Metodo para imprimir las aristas y los vertices de la grafica
      */
     public void imprimirGrafica(){
-        this.imprimirAristas();
         this.imprimirVertices();
+        this.imprimirAristas();
     }
 
     /**
@@ -241,7 +270,7 @@ public class Grafica{
     public void imprimirArboles(){
         for (int i = 0; i < arboles.size(); i++) {
             Grafica g = arboles.get(i);
-            System.out.println("Arbol " + (i+1));
+            System.out.println("\nArbol " + (i+1));
             g.imprimirGrafica();
         }
     }

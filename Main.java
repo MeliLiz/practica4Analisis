@@ -3,8 +3,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Clase principal
+ */
 public class Main {
-    
+    /**
+     * Metodo principal
+     * @param args
+     */
     public static void main(String[] args) {
         String filePath = "Archivo.txt";
         ArrayList<int[]> cadenas = new ArrayList<int[]>();
@@ -38,8 +44,9 @@ public class Main {
 
             //g.imprimirGrafica();
             g.generarMatrizAdyacencias();
-            g.imprimirMatriz();
+            //g.imprimirMatriz();
             g.bosqueGenerador();
+            System.out.println("El bosque generador está compuesto por los siguientes arboles: ");
             g.imprimirArboles();
             
         } catch (IOException e) {
